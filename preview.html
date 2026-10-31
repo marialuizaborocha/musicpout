@@ -1,0 +1,1588 @@
+
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#171526">
+<title>musicpout | Organize sua música</title>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&display=swap');
+
+:root {
+  --bg:#11101b;
+  --surface:#1b1928;
+  --surface2:#242235;
+  --surface3:#302d43;
+  --purple:#a78bfa;
+  --pink:#f08dbb;
+  --text:#f7f4ff;
+  --muted:#aaa5bd;
+  --border:#38344c;
+  --green:#75d6ae;
+  --red:#ff7d91;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  background:var(--bg);
+  color:var(--text);
+  font-family:'DM Sans',sans-serif;
+  min-height:100vh;
+}
+
+button,input,select,textarea{font:inherit}
+button{cursor:pointer}
+
+.app{display:flex;min-height:100vh}
+
+.sidebar {
+  width:245px;
+  background:#171522;
+  border-right:1px solid var(--border);
+  padding:27px 17px;
+  display:flex;
+  flex-direction:column;
+  position:fixed;
+  height:100vh;
+  z-index:10;
+}
+
+.logo {
+  font-family:'Outfit',sans-serif;
+  font-size:27px;
+  font-weight:800;
+  letter-spacing:-1.5px;
+  padding:0 10px 35px;
+}
+
+.logo span{color:var(--purple)}
+.logo small {
+  display:block;
+  font-size:10px;
+  letter-spacing:3px;
+  color:var(--muted);
+  font-weight:500;
+  margin-top:3px;
+}
+
+.nav-label {
+  font-size:10px;
+  color:#77728b;
+  letter-spacing:2px;
+  font-weight:700;
+  padding:0 12px;
+  margin-bottom:12px;
+}
+
+.nav-btn {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:12px;
+  border:0;
+  background:transparent;
+  color:var(--muted);
+  border-radius:10px;
+  width:100%;
+  text-align:left;
+  margin-bottom:5px;
+  transition:.2s;
+  font-size:13px;
+}
+
+.nav-btn:hover,.nav-btn.active {
+  background:#302a43;
+  color:white;
+}
+
+.nav-btn.active{border-left:3px solid var(--purple)}
+.nav-icon{font-size:18px;width:22px;text-align:center}
+
+.sidebar-bottom{margin-top:auto}
+.profile-mini {
+  border-top:1px solid var(--border);
+  padding:18px 8px 0;
+  display:flex;
+  gap:10px;
+  align-items:center;
+  font-size:12px;
+}
+.avatar {
+  width:36px;height:36px;
+  border-radius:50%;
+  background:linear-gradient(135deg,#a78bfa,#ec91ba);
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  color:#211a32;
+}
+.profile-mini small{color:var(--muted);display:block;margin-top:3px}
+
+main {
+  margin-left:245px;
+  width:calc(100% - 245px);
+  padding:35px 5%;
+  max-width:1600px;
+}
+
+.topbar {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:15px;
+  margin-bottom:34px;
+}
+.topbar p{color:var(--muted);font-size:13px}
+.topbar h1{
+  font-family:'Outfit',sans-serif;
+  font-size:27px;
+  margin-bottom:5px;
+}
+
+.tag {
+  border:1px solid #51446e;
+  background:#29243a;
+  color:#c6b5ff;
+  padding:8px 13px;
+  border-radius:30px;
+  font-size:11px;
+  white-space:nowrap;
+}
+
+.page{display:none}
+.page.active{display:block}
+
+.welcome {
+  background:linear-gradient(115deg,#302445,#25213b 55%,#39243f);
+  border:1px solid #504064;
+  padding:35px;
+  border-radius:18px;
+  margin-bottom:25px;
+  position:relative;
+  overflow:hidden;
+}
+.welcome:after {
+  content:"♫";
+  position:absolute;
+  right:45px;
+  top:-32px;
+  font-size:170px;
+  color:#ffffff0c;
+}
+.welcome h2 {
+  font-family:'Outfit',sans-serif;
+  font-size:29px;
+  margin-bottom:9px;
+  position:relative;
+  z-index:1;
+}
+.welcome p {
+  color:#c9bfd8;
+  font-size:13px;
+  line-height:1.7;
+  max-width:500px;
+  position:relative;
+  z-index:1;
+}
+.welcome button{position:relative;z-index:1;margin-top:20px}
+
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:15px;
+  margin-bottom:28px;
+}
+.stat {
+  background:var(--surface);
+  border:1px solid var(--border);
+  padding:20px;
+  border-radius:13px;
+}
+.stat .number {
+  font-family:'Outfit',sans-serif;
+  font-size:29px;
+  font-weight:700;
+  margin:8px 0 3px;
+}
+.stat small{color:var(--muted);font-size:12px}
+.stat-icon{font-size:19px}
+
+.section-head {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:15px;
+  margin:27px 0 17px;
+}
+.section-head h2 {
+  font-family:'Outfit',sans-serif;
+  font-size:19px;
+}
+.section-head p{color:var(--muted);font-size:12px;margin-top:5px}
+
+.btn {
+  border:0;
+  padding:11px 17px;
+  border-radius:9px;
+  background:linear-gradient(120deg,#a78bfa,#d38bc4);
+  color:#21172d;
+  font-weight:800;
+  font-size:12px;
+  transition:.2s;
+}
+.btn:hover{filter:brightness(1.12);transform:translateY(-1px)}
+.btn.secondary {
+  background:var(--surface3);
+  color:var(--text);
+  border:1px solid var(--border);
+}
+.btn.danger{background:#492733;color:#ffb4c0}
+.btn.small{padding:8px 12px;font-size:11px}
+.btn.full{width:100%}
+
+.panel {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:14px;
+  padding:22px;
+  margin-bottom:20px;
+}
+
+.search {
+  width:100%;
+  padding:13px 15px;
+  border-radius:9px;
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:white;
+  outline:none;
+  margin-bottom:17px;
+}
+.search:focus,input:focus,select:focus,textarea:focus{
+  border-color:var(--purple);
+}
+
+.song-grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(245px,1fr));
+  gap:14px;
+}
+
+.song-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:13px;
+  padding:19px;
+  transition:.2s;
+}
+.song-card:hover{border-color:#806ab0;transform:translateY(-2px)}
+.song-card h3{font-size:15px;margin-bottom:5px}
+.song-card .artist{color:var(--muted);font-size:12px;margin-bottom:16px}
+.song-tags{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:17px}
+.song-tag {
+  padding:5px 9px;
+  border-radius:6px;
+  background:#302a43;
+  color:#cdbbff;
+  font-size:10px;
+}
+.song-actions{display:flex;gap:7px;flex-wrap:wrap}
+.song-actions button{flex:1}
+
+.form-grid {
+  display:grid;
+  grid-template-columns:repeat(2,1fr);
+  gap:15px;
+}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+.field label{font-size:12px;color:#d1cbdc;font-weight:600}
+.field input,.field select,.field textarea {
+  width:100%;
+  background:var(--surface2);
+  border:1px solid var(--border);
+  border-radius:9px;
+  padding:12px;
+  color:white;
+  outline:none;
+  font-size:13px;
+}
+.field select option{background:#242235}
+.field textarea{resize:vertical;min-height:170px;line-height:1.7}
+.hint{font-size:11px;color:var(--muted);line-height:1.5}
+.form-buttons{display:flex;gap:10px;margin-top:20px;flex-wrap:wrap}
+
+.tabs {
+  display:flex;
+  gap:7px;
+  flex-wrap:wrap;
+  margin-bottom:20px;
+}
+.tab {
+  border:1px solid var(--border);
+  background:var(--surface2);
+  color:var(--muted);
+  padding:9px 13px;
+  border-radius:8px;
+  font-size:11px;
+}
+.tab.active{background:#49365f;color:white;border-color:#8d70b7}
+
+.empty {
+  text-align:center;
+  padding:40px 15px;
+  color:var(--muted);
+  font-size:13px;
+}
+.empty .symbol{font-size:36px;margin-bottom:12px}
+
+.result-card {
+  background:var(--surface);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:17px;
+  margin-bottom:12px;
+}
+.result-card h3{font-size:14px;margin-bottom:7px}
+.result-card p{font-size:12px;color:var(--muted);line-height:1.6}
+.result-card .song-tags{margin:12px 0 0}
+
+.sequence-item {
+  display:flex;
+  align-items:center;
+  gap:13px;
+  background:var(--surface2);
+  padding:13px;
+  border-radius:10px;
+  margin-bottom:9px;
+}
+.sequence-number {
+  width:31px;height:31px;
+  background:#403353;
+  color:#d2bdff;
+  border-radius:8px;
+  display:grid;
+  place-items:center;
+  font-weight:800;
+  flex-shrink:0;
+}
+.sequence-item .info{flex:1;min-width:0}
+.sequence-item h4{font-size:12px}
+.sequence-item small{font-size:10px;color:var(--muted)}
+.sequence-item button{padding:6px 9px}
+
+.history-item {
+  border-left:2px solid #876cb7;
+  padding:2px 0 18px 17px;
+  margin-left:7px;
+  position:relative;
+}
+.history-item:before {
+  content:"";
+  width:9px;height:9px;
+  background:var(--purple);
+  border-radius:50%;
+  position:absolute;
+  left:-5.5px;top:4px;
+}
+.history-item strong{font-size:12px}
+.history-item p{font-size:11px;color:var(--muted);margin-top:4px}
+.history-item small{font-size:10px;color:#8f89a3}
+
+.modal {
+  display:none;
+  position:fixed;
+  inset:0;
+  z-index:50;
+  background:#080711d9;
+  padding:20px;
+  overflow:auto;
+  align-items:center;
+  justify-content:center;
+}
+.modal.show{display:flex}
+.modal-content {
+  width:100%;
+  max-width:680px;
+  max-height:90vh;
+  overflow:auto;
+  background:#1b1928;
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:25px;
+}
+.modal-header {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:20px;
+}
+.modal-header h2{font-family:'Outfit';font-size:20px}
+.close {
+  background:var(--surface3);
+  border:0;
+  color:white;
+  width:32px;height:32px;
+  border-radius:8px;
+  font-size:18px;
+}
+
+pre.lyrics {
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+  font-family:'DM Sans',sans-serif;
+  background:#171522;
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:18px;
+  line-height:1.9;
+  font-size:13px;
+  margin-top:15px;
+  color:#eee8ff;
+}
+
+.toast {
+  position:fixed;
+  bottom:25px;
+  right:25px;
+  background:#302b42;
+  border:1px solid #756095;
+  padding:14px 19px;
+  border-radius:10px;
+  font-size:12px;
+  z-index:100;
+  opacity:0;
+  transform:translateY(10px);
+  transition:.3s;
+  pointer-events:none;
+}
+.toast.show{opacity:1;transform:translateY(0)}
+
+.mobile-menu{display:none}
+footer {
+  text-align:center;
+  color:#77728b;
+  font-size:10px;
+  padding:30px 0 10px;
+}
+
+@media(max-width:800px){
+  .sidebar{width:65px;padding:20px 8px}
+  .logo{font-size:0;padding:0 0 35px;text-align:center}
+  .logo:first-letter{font-size:25px}
+  .logo small,.nav-label,.nav-btn .nav-text,.profile-mini .profile-text{display:none}
+  .nav-btn{justify-content:center;padding:13px 5px}
+  .nav-icon{font-size:19px}
+  .profile-mini{justify-content:center;padding:15px 0 0}
+  main{margin-left:65px;width:calc(100% - 65px);padding:25px 4%}
+}
+@media(max-width:550px){
+  main{padding:20px 13px}
+  .topbar h1{font-size:21px}
+  .topbar p{font-size:11px}
+  .tag{font-size:9px;padding:7px}
+  .welcome{padding:24px 19px}
+  .welcome h2{font-size:23px}
+  .welcome:after{right:5px;font-size:110px}
+  .stats{gap:8px}
+  .stat{padding:13px 10px}
+  .stat .number{font-size:23px}
+  .stat small{font-size:10px}
+  .stat-icon{font-size:15px}
+  .form-grid{grid-template-columns:1fr}
+  .field.full{grid-column:auto}
+  .section-head{align-items:flex-start}
+  .section-head h2{font-size:16px}
+  .btn{padding:10px 12px}
+  .modal-content{padding:18px}
+}
+</style>
+</head>
+
+<body>
+<div class="app">
+
+<aside class="sidebar">
+  <div class="logo">music<span>pout.</span><small>SEU REPERTÓRIO, SUA SEQUÊNCIA</small></div>
+
+  <div class="nav-label">MENU PRINCIPAL</div>
+  <button class="nav-btn active" onclick="navigate('inicio',this)">
+    <span class="nav-icon">⌂</span><span class="nav-text">Início</span>
+  </button>
+  <button class="nav-btn" onclick="navigate('musicas',this)">
+    <span class="nav-icon">♫</span><span class="nav-text">Minhas músicas</span>
+  </button>
+  <button class="nav-btn" onclick="navigate('organizar',this)">
+    <span class="nav-icon">✧</span><span class="nav-text">Criar pout-pourri</span>
+  </button>
+  <button class="nav-btn" onclick="navigate('sequencias',this)">
+    <span class="nav-icon">☷</span><span class="nav-text">Minhas sequências</span>
+  </button>
+
+  <div class="nav-label" style="margin-top:28px">GERENCIAMENTO</div>
+  <button class="nav-btn" onclick="navigate('historico',this)">
+    <span class="nav-icon">◷</span><span class="nav-text">Histórico</span>
+  </button>
+  <button class="nav-btn" onclick="navigate('perfil',this)">
+    <span class="nav-icon">♙</span><span class="nav-text">Meu cadastro</span>
+  </button>
+
+  <div class="sidebar-bottom">
+    <div class="profile-mini">
+      <div class="avatar" id="avatar">M</div>
+      <div class="profile-text"><strong id="sideName">Músico</strong><small>Minha conta</small></div>
+    </div>
+  </div>
+</aside>
+
+<main>
+  <div class="topbar">
+    <div>
+      <h1 id="pageTitle">Início</h1>
+      <p id="pageSubtitle">Seu espaço para criar combinações musicais.</p>
+    </div>
+    <div class="tag">♫ MUSIC WORKSPACE</div>
+  </div>
+
+  <!-- INÍCIO -->
+  <section class="page active" id="inicio">
+    <div class="welcome">
+      <h2>Seu repertório.<br>Sua criatividade. 🎶</h2>
+      <p>Organize suas músicas, encontre combinações pelo tom, ritmo e posição do capotraste e monte pout-pourris do seu jeito.</p>
+      <button class="btn" onclick="navigate('organizar')">+ Criar meu pout-pourri</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat">
+        <span class="stat-icon">♫</span>
+        <div class="number" id="totalSongs">0</div>
+        <small>Músicas cadastradas</small>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">✧</span>
+        <div class="number" id="totalSets">0</div>
+        <small>Pout-pourris criados</small>
+      </div>
+      <div class="stat">
+        <span class="stat-icon">◷</span>
+        <div class="number" id="totalHistory">0</div>
+        <small>Alterações registradas</small>
+      </div>
+    </div>
+
+    <div class="section-head">
+      <div><h2>Adicionadas recentemente</h2><p>As últimas músicas do seu repertório.</p></div>
+      <button class="btn secondary small" onclick="navigate('musicas')">Ver todas →</button>
+    </div>
+    <div class="song-grid" id="recentSongs"></div>
+
+    <footer>musicpout © 2026 · Feito para quem vive de música.</footer>
+  </section>
+
+  <!-- MÚSICAS -->
+  <section class="page" id="musicas">
+    <div class="section-head">
+      <div><h2>Biblioteca musical</h2><p>Cadastre e gerencie suas músicas.</p></div>
+      <button class="btn" onclick="openSongForm()">+ Nova música</button>
+    </div>
+    <input class="search" id="songSearch" placeholder="⌕  Buscar por música, artista, tom ou ritmo..." oninput="renderSongs()">
+    <div class="song-grid" id="songList"></div>
+  </section>
+
+  <!-- ORGANIZAR -->
+  <section class="page" id="organizar">
+    <div class="section-head">
+      <div><h2>Montar novo pout-pourri</h2><p>Escolha os critérios e descubra combinações possíveis.</p></div>
+    </div>
+
+    <div class="panel">
+      <h3 style="font-size:15px;margin-bottom:7px">1. Como você quer organizar?</h3>
+      <p class="hint" style="margin-bottom:17px">Selecione o critério principal para encontrar músicas compatíveis.</p>
+
+      <div class="tabs" id="criteriaTabs">
+        <button class="tab active" onclick="setCriteria('tom',this)">♫ Mesmo tom</button>
+        <button class="tab" onclick="setCriteria('ritmo',this)">♬ Mesmo ritmo</button>
+        <button class="tab" onclick="setCriteria('capo',this)">♩ Mesmo capotraste</button>
+        <button class="tab" onclick="setCriteria('todos',this)">✧ Combinação livre</button>
+      </div>
+
+      <div class="form-grid">
+        <div class="field">
+          <label>Nome do pout-pourri</label>
+          <input id="setName" placeholder="Ex.: Modão de domingo">
+        </div>
+        <div class="field">
+          <label>Critério de organização</label>
+          <select id="setCriteria" onchange="changeCriteria()">
+            <option value="tom">Mesmo tom</option>
+            <option value="ritmo">Mesmo ritmo</option>
+            <option value="capo">Mesmo capotraste</option>
+            <option value="todos">Combinação livre</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="hint" style="margin-top:15px">O sistema compara os dados cadastrados. Na combinação livre, você poderá escolher músicas com características diferentes.</div>
+    </div>
+
+    <div class="panel">
+      <h3 style="font-size:15px;margin-bottom:7px">2. Selecione as músicas</h3>
+      <p class="hint" style="margin-bottom:15px">As músicas compatíveis aparecerão abaixo. Você pode selecionar quantas quiser.</p>
+      <input class="search" id="organizeSearch" placeholder="⌕  Pesquisar música..." oninput="renderCandidates()">
+      <div id="candidates"></div>
+    </div>
+
+    <div class="panel">
+      <h3 style="font-size:15px;margin-bottom:7px">3. Ordem do seu pout-pourri</h3>
+      <p class="hint" style="margin-bottom:16px">Use as setas para definir a sequência de apresentação.</p>
+      <div id="selectedSongs"></div>
+      <div class="form-buttons">
+        <button class="btn" onclick="saveSet()">Salvar pout-pourri ♫</button>
+        <button class="btn secondary" onclick="clearSelection()">Limpar seleção</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- SEQUÊNCIAS -->
+  <section class="page" id="sequencias">
+    <div class="section-head">
+      <div><h2>Minhas sequências</h2><p>Todos os seus pout-pourris salvos.</p></div>
+    </div>
+    <input class="search" id="setSearch" placeholder="⌕  Buscar sequência..." oninput="renderSets()">
+    <div id="setList"></div>
+  </section>
+
+  <!-- HISTÓRICO -->
+  <section class="page" id="historico">
+    <div class="section-head">
+      <div><h2>Histórico de atividades</h2><p>Acompanhe as alterações realizadas na sua biblioteca.</p></div>
+      <button class="btn danger small" onclick="clearHistory()">Limpar histórico</button>
+    </div>
+    <div class="panel" id="historyList"></div>
+  </section>
+
+  <!-- PERFIL -->
+  <section class="page" id="perfil">
+    <div class="section-head">
+      <div><h2>Meu cadastro</h2><p>Seus dados de músico.</p></div>
+    </div>
+    <div class="panel">
+      <form id="profileForm">
+        <div class="form-grid">
+          <div class="field full">
+            <label>Nome completo</label>
+            <input id="profileName" placeholder="Seu nome" required>
+          </div>
+          <div class="field">
+            <label>E-mail</label>
+            <input id="profileEmail" type="email" placeholder="seuemail@email.com">
+          </div>
+          <div class="field">
+            <label>Número de telefone</label>
+            <input id="profilePhone" type="tel" placeholder="(00) 00000-0000">
+          </div>
+          <div class="field full">
+            <label>Instrumento(s)</label>
+            <input id="profileInstrument" placeholder="Ex.: Violão, viola, voz...">
+          </div>
+        </div>
+        <div class="form-buttons">
+          <button class="btn" type="submit">Salvar cadastro</button>
+        </div>
+      </form>
+    </div>
+    <div class="panel">
+      <h3 style="font-size:14px;margin-bottom:10px">Armazenamento</h3>
+      <p class="hint">Seus dados são armazenados localmente no navegador usando localStorage. Eles permanecem disponíveis neste dispositivo e navegador, mas não são sincronizados automaticamente com outros aparelhos.</p>
+      <div class="form-buttons">
+        <button class="btn secondary" onclick="exportBackup()">Exportar backup JSON</button>
+        <button class="btn secondary" onclick="document.getElementById('importFile').click()">Importar backup</button>
+        <input id="importFile" type="file" accept=".json,application/json" hidden onchange="importBackup(event)">
+      </div>
+    </div>
+  </section>
+</main>
+</div>
+
+<!-- MODAL DE MÚSICA -->
+<div class="modal" id="songModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="songModalTitle">Cadastrar música</h2>
+      <button class="close" onclick="closeModal('songModal')">×</button>
+    </div>
+    <form id="songForm">
+      <input type="hidden" id="editSongId">
+      <div class="form-grid">
+        <div class="field">
+          <label>Nome da música *</label>
+          <input id="songTitle" required placeholder="Nome da música">
+        </div>
+        <div class="field">
+          <label>Artista / Compositor</label>
+          <input id="songArtist" placeholder="Nome do artista">
+        </div>
+        <div class="field">
+          <label>Tom original *</label>
+          <select id="songKey" required>
+            <option value="">Selecione o tom</option>
+            <option>C</option><option>C#</option><option>Db</option>
+            <option>D</option><option>D#</option><option>Eb</option>
+            <option>E</option><option>F</option><option>F#</option>
+            <option>Gb</option><option>G</option><option>G#</option>
+            <option>Ab</option><option>A</option><option>A#</option>
+            <option>Bb</option><option>B</option>
+            <option>Am</option><option>Bbm</option><option>Bm</option>
+            <option>Cm</option><option>C#m</option><option>Dm</option>
+            <option>D#m</option><option>Em</option><option>Fm</option>
+            <option>F#m</option><option>Gm</option><option>G#m</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Ritmo</label>
+          <select id="songRhythm">
+            <option value="">Selecione</option>
+            <option>Sertanejo</option>
+            <option>Modão</option>
+            <option>Moda de viola</option>
+            <option>Vanera</option>
+            <option>Guarânia</option>
+            <option>Forró</option>
+            <option>Vaneira</option>
+            <option>Balada</option>
+            <option>Pop</option>
+            <option>Rock</option>
+            <option>Samba</option>
+            <option>Pagode</option>
+            <option>Outro</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Capotraste (casa)</label>
+          <select id="songCapo">
+            <option value="0">Sem capotraste</option>
+            <option value="1">1ª casa</option>
+            <option value="2">2ª casa</option>
+            <option value="3">3ª casa</option>
+            <option value="4">4ª casa</option>
+            <option value="5">5ª casa</option>
+            <option value="6">6ª casa</option>
+            <option value="7">7ª casa</option>
+            <option value="8">8ª casa</option>
+            <option value="9">9ª casa</option>
+            <option value="10">10ª casa</option>
+            <option value="11">11ª casa</option>
+            <option value="12">12ª casa</option>
+          </select>
+        </div>
+        <div class="field">
+          <label>Andamento (BPM)</label>
+          <input id="songBpm" type="number" min="1" max="400" placeholder="Ex.: 90">
+        </div>
+        <div class="field full">
+          <label>Letra com cifras *</label>
+          <textarea id="songLyrics" required placeholder="Cole aqui a letra e as cifras da música.
+
+Exemplo:
+
+G             D
+Eu quero você
+Em             C
+Aqui perto de mim
+
+G              D
+Mais uma estrofe..."></textarea>
+          <span class="hint">Cole a letra e as cifras na disposição que deseja visualizar no seu repertório.</span>
+        </div>
+        <div class="field full">
+          <label>Observações</label>
+          <input id="songNotes" placeholder="Ex.: Entrada com dedilhado, solo, mudança de andamento...">
+        </div>
+      </div>
+      <div class="form-buttons">
+        <button type="submit" class="btn">Salvar música</button>
+        <button type="button" class="btn secondary" onclick="closeModal('songModal')">Cancelar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- MODAL DE VISUALIZAÇÃO -->
+<div class="modal" id="viewModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="viewTitle">Música</h2>
+      <button class="close" onclick="closeModal('viewModal')">×</button>
+    </div>
+    <div id="viewContent"></div>
+  </div>
+</div>
+
+<!-- MODAL DE SEQUÊNCIA -->
+<div class="modal" id="setModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <h2 id="setModalTitle">Pout-pourri</h2>
+      <button class="close" onclick="closeModal('setModal')">×</button>
+    </div>
+    <div id="setModalContent"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ===================================
+   MUSICPOUT - SISTEMA DE REPERTÓRIO
+   Armazenamento local via localStorage
+=================================== */
+
+const DB_KEY = 'musicpout_database_v1';
+
+let db = {
+  profile:{name:'',email:'',phone:'',instrument:''},
+  songs:[],
+  sets:[],
+  history:[]
+};
+
+let criteria = 'tom';
+let selected = [];
+
+function loadDB(){
+  try{
+    const saved = localStorage.getItem(DB_KEY);
+    if(saved){
+      const parsed = JSON.parse(saved);
+      db = {
+        profile:parsed.profile || db.profile,
+        songs:Array.isArray(parsed.songs)?parsed.songs:[],
+        sets:Array.isArray(parsed.sets)?parsed.sets:[],
+        history:Array.isArray(parsed.history)?parsed.history:[]
+      };
+    }
+  }catch(e){
+    console.error('Erro ao carregar dados:',e);
+  }
+}
+
+function persist(){
+  try{
+    localStorage.setItem(DB_KEY,JSON.stringify(db));
+  }catch(e){
+    alert('Não foi possível salvar. Verifique o espaço disponível no navegador.');
+  }
+}
+
+function uid(){
+  return Date.now().toString(36)+Math.random().toString(36).slice(2,8);
+}
+
+function dateNow(){
+  return new Date().toLocaleString('pt-BR',{
+    day:'2-digit',
+    month:'2-digit',
+    year:'numeric',
+    hour:'2-digit',
+    minute:'2-digit',
+    second:'2-digit'
+  });
+}
+
+function log(action,description){
+  db.history.unshift({
+    id:uid(),
+    action,
+    description,
+    date:dateNow()
+  });
+  db.history=db.history.slice(0,500);
+  persist();
+  updateStats();
+}
+
+function toast(message){
+  const el=document.getElementById('toast');
+  el.textContent=message;
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'),2600);
+}
+
+function navigate(page,button){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(page).classList.add('active');
+
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  if(button)button.classList.add('active');
+  else{
+    const nav=[...document.querySelectorAll('.nav-btn')];
+    const index={inicio:0,musicas:1,organizar:2,sequencias:3,historico:4,perfil:5}[page];
+    if(nav[index])nav[index].classList.add('active');
+  }
+
+  const titles={
+    inicio:['Início','Seu espaço para criar combinações musicais.'],
+    musicas:['Minhas músicas','Sua biblioteca pessoal de letras e cifras.'],
+    organizar:['Criar pout-pourri','Encontre a combinação musical ideal.'],
+    sequencias:['Minhas sequências','Seus repertórios organizados.'],
+    historico:['Histórico','Acompanhe todas as suas alterações.'],
+    perfil:['Meu cadastro','Gerencie seus dados pessoais.']
+  };
+
+  document.getElementById('pageTitle').textContent=titles[page][0];
+  document.getElementById('pageSubtitle').textContent=titles[page][1];
+
+  if(page==='musicas')renderSongs();
+  if(page==='sequencias')renderSets();
+  if(page==='historico')renderHistory();
+  if(page==='organizar'){
+    renderCandidates();
+    renderSelected();
+  }
+  if(page==='perfil')fillProfile();
+}
+
+function updateStats(){
+  document.getElementById('totalSongs').textContent=db.songs.length;
+  document.getElementById('totalSets').textContent=db.sets.length;
+  document.getElementById('totalHistory').textContent=db.history.length;
+
+  const name=db.profile.name || 'Músico';
+  document.getElementById('sideName').textContent=name.split(' ')[0];
+  document.getElementById('avatar').textContent=name.charAt(0).toUpperCase()||'M';
+
+  renderRecent();
+}
+
+function escapeHTML(value){
+  return String(value??'').replace(/[&<>"']/g,char=>({
+    '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'
+  })[char]);
+}
+
+function renderRecent(){
+  const container=document.getElementById('recentSongs');
+  const songs=[...db.songs].slice(-3).reverse();
+
+  if(!songs.length){
+    container.innerHTML='<div class="empty" style="grid-column:1/-1"><div class="symbol">♫</div>Você ainda não cadastrou músicas.<br>Comece adicionando sua primeira cifra!</div>';
+    return;
+  }
+
+  container.innerHTML=songs.map(songCard).join('');
+}
+
+function songCard(s){
+  return `
+  <div class="song-card">
+    <h3>${escapeHTML(s.title)}</h3>
+    <div class="artist">${escapeHTML(s.artist||'Artista não informado')}</div>
+    <div class="song-tags">
+      <span class="song-tag">Tom: ${escapeHTML(s.key)}</span>
+      <span class="song-tag">${escapeHTML(s.rhythm||'Sem ritmo')}</span>
+      <span class="song-tag">Capo: ${escapeHTML(s.capo)}ª</span>
+    </div>
+    <div class="song-actions">
+      <button class="btn secondary small" onclick="viewSong('${s.id}')">Ver cifra</button>
+      <button class="btn secondary small" onclick="editSong('${s.id}')">Editar</button>
+      <button class="btn danger small" onclick="deleteSong('${s.id}')">Excluir</button>
+    </div>
+  </div>`;
+}
+
+function renderSongs(){
+  const query=(document.getElementById('songSearch').value||'').toLowerCase();
+  const filtered=db.songs.filter(s=>
+    [s.title,s.artist,s.key,s.rhythm,s.capo].join(' ').toLowerCase().includes(query)
+  );
+  const container=document.getElementById('songList');
+
+  container.innerHTML=filtered.length
+    ?filtered.slice().reverse().map(songCard).join('')
+    :'<div class="empty" style="grid-column:1/-1"><div class="symbol">♫</div>Nenhuma música encontrada.</div>';
+}
+
+function openSongForm(){
+  document.getElementById('songForm').reset();
+  document.getElementById('editSongId').value='';
+  document.getElementById('songModalTitle').textContent='Cadastrar música';
+  document.getElementById('songModal').classList.add('show');
+}
+
+function closeModal(id){
+  document.getElementById(id).classList.remove('show');
+}
+
+document.getElementById('songForm').addEventListener('submit',function(e){
+  e.preventDefault();
+
+  const id=document.getElementById('editSongId').value;
+
+  const song={
+    id:id||uid(),
+    title:document.getElementById('songTitle').value.trim(),
+    artist:document.getElementById('songArtist').value.trim(),
+    key:document.getElementById('songKey').value,
+    rhythm:document.getElementById('songRhythm').value,
+    capo:Number(document.getElementById('songCapo').value),
+    bpm:document.getElementById('songBpm').value,
+    lyrics:document.getElementById('songLyrics').value,
+    notes:document.getElementById('songNotes').value.trim(),
+    updatedAt:dateNow()
+  };
+
+  if(id){
+    const index=db.songs.findIndex(s=>s.id===id);
+    if(index!==-1){
+      db.songs[index]=song;
+      log('Música editada','A música "'+song.title+'" foi atualizada.');
+      toast('Música atualizada!');
+    }
+  }else{
+    song.createdAt=dateNow();
+    db.songs.push(song);
+    log('Música cadastrada','A música "'+song.title+'" foi adicionada à biblioteca.');
+    toast('Música cadastrada!');
+  }
+
+  persist();
+  closeModal('songModal');
+  renderSongs();
+  updateStats();
+});
+
+function editSong(id){
+  const s=db.songs.find(x=>x.id===id);
+  if(!s)return;
+
+  document.getElementById('editSongId').value=s.id;
+  document.getElementById('songTitle').value=s.title;
+  document.getElementById('songArtist').value=s.artist||'';
+  document.getElementById('songKey').value=s.key;
+  document.getElementById('songRhythm').value=s.rhythm||'';
+  document.getElementById('songCapo').value=s.capo;
+  document.getElementById('songBpm').value=s.bpm||'';
+  document.getElementById('songLyrics').value=s.lyrics;
+  document.getElementById('songNotes').value=s.notes||'';
+
+  document.getElementById('songModalTitle').textContent='Editar música';
+  document.getElementById('songModal').classList.add('show');
+}
+
+function deleteSong(id){
+  const s=db.songs.find(x=>x.id===id);
+  if(!s)return;
+
+  if(!confirm('Deseja realmente excluir "'+s.title+'"?'))return;
+
+  db.songs=db.songs.filter(x=>x.id!==id);
+
+  // Remove a música das sequências que a utilizavam.
+  db.sets.forEach(set=>{
+    set.songIds=set.songIds.filter(songId=>songId!==id);
+  });
+
+  selected=selected.filter(songId=>songId!==id);
+
+  log('Música excluída','A música "'+s.title+'" foi removida da biblioteca.');
+  persist();
+  renderSongs();
+  renderSets();
+  updateStats();
+  toast('Música excluída.');
+}
+
+function viewSong(id){
+  const s=db.songs.find(x=>x.id===id);
+  if(!s)return;
+
+  document.getElementById('viewTitle').textContent=s.title;
+
+  document.getElementById('viewContent').innerHTML=`
+    <p style="font-size:12px;color:var(--muted)">${escapeHTML(s.artist||'Artista não informado')}</p>
+    <div class="song-tags" style="margin-top:15px">
+      <span class="song-tag">Tom: ${escapeHTML(s.key)}</span>
+      <span class="song-tag">${escapeHTML(s.rhythm||'Sem ritmo')}</span>
+      <span class="song-tag">Capotraste: ${s.capo}ª casa</span>
+      ${s.bpm?`<span class="song-tag">${escapeHTML(s.bpm)} BPM</span>`:''}
+    </div>
+    <pre class="lyrics">${escapeHTML(s.lyrics)}</pre>
+    ${s.notes?`<p class="hint" style="margin-top:15px">Observações: ${escapeHTML(s.notes)}</p>`:''}
+    <p class="hint" style="margin-top:12px">Última atualização: ${escapeHTML(s.updatedAt||s.createdAt||'')}</p>
+    <div class="form-buttons">
+      <button class="btn" onclick="downloadSong('${s.id}')">Exportar cifra</button>
+      <button class="btn secondary" onclick="editSong('${s.id}');closeModal('viewModal')">Editar</button>
+    </div>
+  `;
+
+  document.getElementById('viewModal').classList.add('show');
+}
+
+function downloadFile(filename,content,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
+function downloadSong(id){
+  const s=db.songs.find(x=>x.id===id);
+  if(!s)return;
+
+  const content=
+`${s.title}
+${s.artist||''}
+
+Tom: ${s.key}
+Ritmo: ${s.rhythm||'Não informado'}
+Capotraste: ${s.capo}ª casa
+${s.bpm?'BPM: '+s.bpm:''}
+
+${s.lyrics}
+
+${s.notes?'Observações: '+s.notes:''}`;
+
+  downloadFile(s.title.replace(/[^\w\-]+/g,'_')+'.txt',content,'text/plain;charset=utf-8');
+}
+
+/* ===================================
+   ORGANIZAÇÃO DAS MÚSICAS
+=================================== */
+
+function setCriteria(value,button){
+  criteria=value;
+  document.querySelectorAll('#criteriaTabs .tab').forEach(t=>t.classList.remove('active'));
+  if(button)button.classList.add('active');
+  document.getElementById('setCriteria').value=value;
+  selected=[];
+  renderCandidates();
+  renderSelected();
+}
+
+function changeCriteria(){
+  criteria=document.getElementById('setCriteria').value;
+  selected=[];
+  document.querySelectorAll('#criteriaTabs .tab').forEach(t=>{
+    t.classList.toggle('active',t.textContent.toLowerCase().includes(
+      criteria==='tom'?'mesmo tom':
+      criteria==='ritmo'?'mesmo ritmo':
+      criteria==='capo'?'mesmo capotraste':'combinação livre'
+    ));
+  });
+  renderCandidates();
+  renderSelected();
+}
+
+function compatible(song){
+  if(criteria==='todos'||selected.length===0)return true;
+
+  const first=db.songs.find(s=>s.id===selected[0]);
+  if(!first)return true;
+
+  if(criteria==='tom')return song.key===first.key;
+  if(criteria==='ritmo')return song.rhythm===first.rhythm;
+  if(criteria==='capo')return song.capo===first.capo;
+
+  return true;
+}
+
+function renderCandidates(){
+  const container=document.getElementById('candidates');
+  if(!container)return;
+
+  const query=(document.getElementById('organizeSearch').value||'').toLowerCase();
+
+  if(!db.songs.length){
+    container.innerHTML='<div class="empty">Você precisa cadastrar músicas antes de montar seu pout-pourri.</div>';
+    return;
+  }
+
+  const filtered=db.songs.filter(s=>
+    [s.title,s.artist,s.key,s.rhythm].join(' ').toLowerCase().includes(query)
+  );
+
+  container.innerHTML=filtered.map(s=>{
+    const checked=selected.includes(s.id);
+    const valid=compatible(s);
+
+    return `
+    <div class="sequence-item" style="${!valid?'opacity:.4':''}">
+      <input type="checkbox" ${checked?'checked':''} ${!valid&&!checked?'disabled':''}
+        onchange="toggleSong('${s.id}',this.checked)" style="accent-color:#a78bfa;width:17px;height:17px">
+      <div class="info">
+        <h4>${escapeHTML(s.title)}</h4>
+        <small>${escapeHTML(s.artist||'Artista não informado')} · ${escapeHTML(s.key)} · ${escapeHTML(s.rhythm||'Sem ritmo')} · Capo ${s.capo}ª</small>
+      </div>
+      <button class="btn secondary small" onclick="viewSong('${s.id}')">Cifra</button>
+    </div>`;
+  }).join('');
+
+  if(!filtered.length)container.innerHTML='<div class="empty">Nenhuma música encontrada.</div>';
+}
+
+function toggleSong(id,checked){
+  if(checked){
+    if(!compatible(db.songs.find(s=>s.id===id))){
+      toast('Essa música não corresponde ao critério selecionado.');
+      return;
+    }
+    selected.push(id);
+  }else{
+    selected=selected.filter(x=>x!==id);
+  }
+
+  renderCandidates();
+  renderSelected();
+}
+
+function renderSelected(){
+  const container=document.getElementById('selectedSongs');
+  if(!container)return;
+
+  if(!selected.length){
+    container.innerHTML='<div class="empty">Sua sequência aparecerá aqui.<br>Selecione as músicas acima para começar.</div>';
+    return;
+  }
+
+  container.innerHTML=selected.map((id,index)=>{
+    const s=db.songs.find(x=>x.id===id);
+    if(!s)return '';
+
+    return `
+    <div class="sequence-item">
+      <div class="sequence-number">${index+1}</div>
+      <div class="info">
+        <h4>${escapeHTML(s.title)}</h4>
+        <small>Tom ${escapeHTML(s.key)} · ${escapeHTML(s.rhythm||'Sem ritmo')} · Capo ${s.capo}ª</small>
+      </div>
+      <button class="btn secondary small" onclick="moveSong(${index},-1)" ${index===0?'disabled':''}>↑</button>
+      <button class="btn secondary small" onclick="moveSong(${index},1)" ${index===selected.length-1?'disabled':''}>↓</button>
+      <button class="btn danger small" onclick="toggleSong('${id}',false)">×</button>
+    </div>`;
+  }).join('');
+}
+
+function moveSong(index,direction){
+  const newIndex=index+direction;
+  if(newIndex<0||newIndex>=selected.length)return;
+
+  [selected[index],selected[newIndex]]=[selected[newIndex],selected[index]];
+  renderSelected();
+  renderCandidates();
+}
+
+function clearSelection(){
+  selected=[];
+  renderCandidates();
+  renderSelected();
+}
+
+function saveSet(){
+  const name=document.getElementById('setName').value.trim();
+  if(!name){
+    toast('Digite um nome para seu pout-pourri.');
+    document.getElementById('setName').focus();
+    return;
+  }
+  if(selected.length<2){
+    toast('Selecione pelo menos duas músicas.');
+    return;
+  }
+
+  const set={
+    id:uid(),
+    name,
+    criteria,
+    songIds:[...selected],
+    createdAt:dateNow(),
+    updatedAt:dateNow()
+  };
+
+  db.sets.push(set);
+  log('Pout-pourri criado','A sequência "'+name+'" foi criada com '+selected.length+' músicas.');
+
+  selected=[];
+  document.getElementById('setName').value='';
+  renderSelected();
+  renderCandidates();
+  renderSets();
+  updateStats();
+  toast('Pout-pourri salvo com sucesso!');
+
+  navigate('sequencias');
+}
+
+/* ===================================
+   SEQUÊNCIAS SALVAS
+=================================== */
+
+function renderSets(){
+  const container=document.getElementById('setList');
+  if(!container)return;
+
+  const query=(document.getElementById('setSearch').value||'').toLowerCase();
+  const sets=db.sets.filter(s=>s.name.toLowerCase().includes(query));
+
+  if(!sets.length){
+    container.innerHTML='<div class="panel empty"><div class="symbol">✧</div>Nenhum pout-pourri encontrado.<br>Crie sua primeira sequência!</div>';
+    return;
+  }
+
+  container.innerHTML=sets.slice().reverse().map(s=>{
+    const songs=s.songIds.map(id=>db.songs.find(x=>x.id===id)).filter(Boolean);
+    const criterion={
+      tom:'Mesmo tom',
+      ritmo:'Mesmo ritmo',
+      capo:'Mesmo capotraste',
+      todos:'Combinação livre'
+    }[s.criteria]||'Personalizado';
+
+    return `
+    <div class="result-card">
+      <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
+        <div>
+          <h3>♫ ${escapeHTML(s.name)}</h3>
+          <p>${songs.length} músicas · ${criterion}</p>
+          <p style="margin-top:5px">Criado em ${escapeHTML(s.createdAt)}</p>
+        </div>
+        <div class="song-actions" style="align-self:flex-start">
+          <button class="btn small" onclick="viewSet('${s.id}')">Abrir</button>
+          <button class="btn secondary small" onclick="editSet('${s.id}')">Editar</button>
+          <button class="btn danger small" onclick="deleteSet('${s.id}')">Excluir</button>
+        </div>
+      </div>
+      <div class="song-tags">
+        ${songs.map(song=>`<span class="song-tag">${escapeHTML(song.title)}</span>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function viewSet(id){
+  const s=db.sets.find(x=>x.id===id);
+  if(!s)return;
+
+  const songs=s.songIds.map(id=>db.songs.find(x=>x.id===id)).filter(Boolean);
+
+  document.getElementById('setModalTitle').textContent=s.name;
+
+  document.getElementById('setModalContent').innerHTML=`
+    <p class="hint">Critério: ${escapeHTML(s.criteria)} · ${songs.length} músicas</p>
+    <div style="margin-top:15px">
+      ${songs.map((song,i)=>`
+        <div style="margin-bottom:25px">
+          <h3 style="font-size:14px;margin-bottom:6px">${i+1}. ${escapeHTML(song.title)}</h3>
+          <p class="hint">${escapeHTML(song.artist||'')} · Tom ${escapeHTML(song.key)} · Capotraste ${song.capo}ª casa</p>
+          <pre class="lyrics">${escapeHTML(song.lyrics)}</pre>
+        </div>
+      `).join('')}
+    </div>
+    <div class="form-buttons">
+      <button class="btn" onclick="exportSet('${s.id}')">Exportar pout-pourri</button>
+      <button class="btn secondary" onclick="editSet('${s.id}');closeModal('setModal')">Editar sequência</button>
+    </div>`;
+  document.getElementById('setModal').classList.add('show');
+}
+
+function exportSet(id){
+  const s=db.sets.find(x=>x.id===id);
+  if(!s)return;
+
+  const songs=s.songIds.map(id=>db.songs.find(x=>x.id===id)).filter(Boolean);
+  let content=`MUSICPOUT - ${s.name.toUpperCase()}\n`;
+  content+=`Data de criação: ${s.createdAt}\n`;
+  content+=`Critério: ${s.criteria}\n`;
+  content+='='.repeat(45)+'\n\n';
+
+  songs.forEach((song,i)=>{
+    content+=`${i+1}. ${song.title.toUpperCase()}\n`;
+    content+=`Artista: ${song.artist||'Não informado'}\n`;
+    content+=`Tom: ${song.key} | Ritmo: ${song.rhythm||'Não informado'} | Capotraste: ${song.capo}ª casa\n`;
+    content+='-'.repeat(35)+'\n';
+    content+=song.lyrics+'\n\n';
+    if(song.notes)content+='Observações: '+song.notes+'\n\n';
+    content+='\n';
+  });
+
+  downloadFile(s.name.replace(/[^\w\-]+/g,'_')+'.txt',content,'text/plain;charset=utf-8');
+  toast('Arquivo do pout-pourri exportado!');
+}
+
+function editSet(id){
+  const s=db.sets.find(x=>x.id===id);
+  if(!s)return;
+
+  selected=[...s.songIds];
+  criteria=s.criteria;
+
+  document.getElementById('setName').value=s.name;
+  document.getElementById('setCriteria').value=criteria;
+  renderCandidates();
+  renderSelected();
+
+  // Remove a sequência antiga; será salva novamente.
+  db.sets=db.sets.filter(x=>x.id!==id);
+  log('Sequência em edição','A sequência "'+s.name+'" foi aberta para edição.');
+  persist();
+
+  closeModal('setModal');
+  navigate('organizar');
+  toast('Edite a sequência e salve novamente.');
+}
+
+function deleteSet(id){
+  const s=db.sets.find(x=>x.id===id);
+  if(!s)return;
+
+  if(!confirm('Excluir o pout-pourri "'+s.name+'"?'))return;
+
+  db.sets=db.sets.filter(x=>x.id!==id);
+  log('Pout-pourri excluído','A sequência "'+s.name+'" foi excluída.');
+  renderSets();
+  updateStats();
+  toast('Sequência excluída.');
+}
+
+/* ===================================
+   HISTÓRICO
+=================================== */
+
+function renderHistory(){
+  const container=document.getElementById('historyList');
+
+  if(!db.history.length){
+    container.innerHTML='<div class="empty"><div class="symbol">◷</div>Nenhuma atividade registrada ainda.</div>';
+    return;
+  }
+
+  container.innerHTML=db.history.map(h=>`
+    <div class="history-item">
+      <strong>${escapeHTML(h.action)}</strong>
+      <p>${escapeHTML(h.description)}</p>
+      <small>${escapeHTML(h.date)}</small>
+    </div>
+  `).join('');
+}
+
+function clearHistory(){
+  if(!confirm('Deseja limpar todo o histórico de alterações?'))return;
+  db.history=[];
+  persist();
+  updateStats();
+  renderHistory();
+  toast('Histórico limpo.');
+}
+
+/* ===================================
+   PERFIL
+=================================== */
+
+function fillProfile(){
+  document.getElementById('profileName').value=db.profile.name||'';
+  document.getElementById('profileEmail').value=db.profile.email||'';
+  document.getElementById('profilePhone').value=db.profile.phone||'';
+  document.getElementById('profileInstrument').value=db.profile.instrument||'';
+}
+
+document.getElementById('profileForm').addEventListener('submit',function(e){
+  e.preventDefault();
+
+  db.profile={
+    name:document.getElementById('profileName').value.trim(),
+    email:document.getElementById('profileEmail').value.trim(),
+    phone:document.getElementById('profilePhone').value.trim(),
+    instrument:document.getElementById('profileInstrument').value.trim()
+  };
+
+  log('Cadastro atualizado','Os dados do perfil foram atualizados.');
+  updateStats();
+  toast('Cadastro salvo com sucesso!');
+});
+
+/* ===================================
+   BACKUP E RESTAURAÇÃO
+=================================== */
+
+function exportBackup(){
+  downloadFile(
+    'musicpout-backup.json',
+    JSON.stringify(db,null,2),
+    'application/json'
+  );
+  toast('Backup exportado!');
+}
+
+function importBackup(event){
+  const file=event.target.files[0];
+  if(!file)return;
+
+  const reader=new FileReader();
+
+  reader.onload=function(){
+    try{
+      const data=JSON.parse(reader.result);
+
+      if(!data||!Array.isArray(data.songs)||!Array.isArray(data.sets)){
+        throw new Error('Arquivo incompatível');
+      }
+
+      if(!confirm('A importação substituirá os dados atuais. Deseja continuar?'))return;
+
+      db={
+        profile:data.profile||{name:'',email:'',phone:'',instrument:''},
+        songs:data.songs,
+        sets:data.sets,
+        history:Array.isArray(data.history)?data.history:[]
+      };
+
+      log('Backup restaurado','Os dados foram importados de um arquivo de backup.');
+      persist();
+      updateStats();
+      renderSongs();
+      renderSets();
+      renderHistory();
+      fillProfile();
+      toast('Backup restaurado!');
+    }catch(e){
+      alert('Não foi possível importar o arquivo. Verifique se ele é um backup válido do musicpout.');
+    }
+    event.target.value='';
+  };
+
+  reader.readAsText(file);
+}
+
+/* ===================================
+   INICIALIZAÇÃO
+=================================== */
+
+loadDB();
+updateStats();
+renderSongs();
+renderSets();
+renderHistory();
+fillProfile();
+
+document.querySelectorAll('.modal').forEach(modal=>{
+  modal.addEventListener('click',function(e){
+    if(e.target===modal)modal.classList.remove('show');
+  });
+});
+
+document.addEventListener('keydown',function(e){
+  if(e.key==='Escape'){
+    document.querySelectorAll('.modal.show').forEach(m=>m.classList.remove('show'));
+  }
+});
+
+</script>
+</body>
+</html>
